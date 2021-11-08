@@ -202,6 +202,8 @@ bool minMedianMax<T>::search(T el)
 template <class T>
 void minMedianMax<T>::rebalance()
 {
+    min = min_heap[0];
+    max = max_heap[0];
     if (maxSize - minSize > 1)
     {
         T temp = max_heap[0];
