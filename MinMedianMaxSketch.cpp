@@ -19,13 +19,13 @@ bool maxComparer(T a, T b)
 template <class T>
 minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max)
 {
-    for (int i = 0; i < minSize; i++)
+    for (int i = 0; i < inMinSize; i++)
     {
-        minMedianMax<T>::insert(true, min.at(i));
+        minMedianMax<T>::insert(true, min[i]);
     }
-    for (int j = 0; j < maxSize; j++)
+    for (int j = 0; j < inMaxSize; j++)
     {
-        minMedianMax<T>::insert(false, max.at(j));
+        minMedianMax<T>::insert(false, max[j]);
     }
     std::cout << "min_size" << minSize << std::endl;
     std::cout << "max_size" << maxSize << std::endl;
@@ -99,7 +99,7 @@ void minMedianMax<T>::insert(bool isMin, T el)
         func = &maxComparer;
         ShiftUp(func, maxSize, max_heap);
     }
-    rebanlance();
+    rebalance();
 }
 
 template <class T>
@@ -132,24 +132,6 @@ void minMedianMax<T>::remove(T el)
         }
     }
     rebalance();
-}
-
-template <class T>
-void minMedianMax<T>::rebalance()
-{
-    if (maxSize - minSize > 1)
-    {
-        T temp = max_heap[0];
-        remove(max_heap[0]);
-        insert(true, temp);
-    }
-    else if (minSize - maxSize > 1)
-    {
-        T temp = min_heap[0];
-        remove(min_heap[0]);
-        insert(false, temp);
-    }
-    return;
 }
 
 template <class T>
@@ -215,4 +197,22 @@ bool minMedianMax<T>::search(T el)
             return true;
     }
     return false;
+}
+
+template <class T>
+void minMedianMax<T>::rebalance()
+{
+    if (maxSize - minSize > 1)
+    {
+        T temp = max_heap[0];
+        remove(max_heap[0]);
+        insert(true, temp);
+    }
+    else if (minSize - maxSize > 1)
+    {
+        T temp = min_heap[0];
+        remove(min_heap[0]);
+        insert(false, temp);
+    }
+    return;
 }
