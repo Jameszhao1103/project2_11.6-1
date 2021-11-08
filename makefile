@@ -1,9 +1,8 @@
-EXE	= project1b
+all: project2.out
 
-all: project1b
-
-project1b: main.cpp dictionary.cpp hash24.cpp
+project2.out: main.cpp 
 	g++ -std=c++11 $^ -o $@
 
 clean:
-	rm -rf ${EXE}
+	rm -f *.out
+

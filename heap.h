@@ -1,4 +1,4 @@
-#ifdef HEAP_H
+#ifndef HEAP_H
 #define HEAP_H
 
 template <class T>
