@@ -17,8 +17,8 @@ private:
 public:
     minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max);
     void insert(bool isMin, T el);
-    void BubbleDown(bool (*func)(T a, T b), int index, std::vector<T> heap);
-    void BubbleUp(bool (*func)(T a, T b), int index, std::vector<T> heap);
+    void ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> heap);
+    void ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> heap);
     void remove(T el);
     void heapify(bool isMin, int size);
     T get_median();
@@ -26,8 +26,7 @@ public:
     T get_maximum();
     int get_size();
     bool search(T el);
-    bool minComparer(T a, T b);
-    bool maxComparer(T a, T b);
+    void rebalance();
 };
 
 #endif

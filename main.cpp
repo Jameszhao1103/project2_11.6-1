@@ -35,8 +35,7 @@ int main(int argc, char *argv[])
         int mid = insert_vec.size() / 2;
         vector<int> minheap = {insert_vec.begin() + mid, insert_vec.end()};
         vector<int> maxheap = {insert_vec.begin(), insert_vec.begin() + mid - 1};
-        minMedianMax<int> median(minheap.size(), maxheap.size(), minheap, maxheap);
-
+        minMedianMax<int> hi(minheap.size(), maxheap.size(), minheap, maxheap);
         // while (getline(myfile2, el))
         // {
         //     remove_vec.push_back(el);
