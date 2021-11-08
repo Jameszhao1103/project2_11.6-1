@@ -1,6 +1,6 @@
-all: project2.out
+all: a.out
 
-project2.out: main.cpp 
+a.out: main.cpp MinMedianMaxSketch.cpp
 	g++ -std=c++11 $^ -o $@
 
 clean:

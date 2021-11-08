@@ -1,25 +1,26 @@
 #include "MinMedianMaxSketch.h"
 
 #include <iostream>
+#include <vector>
 #include <cmath>
 
-using namespace std;
+// using namespace std;
 
 template <class T>
-minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, T min[], T max[])
+minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max)
 {
     for (int i = 0; i < minSize; i++)
     {
-        insert(true, min[i]);
+        minMedianMax<T>::insert(true, min.at(i));
     }
     for (int j = 0; j < maxSize; j++)
     {
-        insert(false, max[j]);
+        minMedianMax<T>::insert(false, max.at(j));
     }
 }
 
 template <class T>
-void minMedianMax<T>::BubbleDown(bool (*func)(T a, T b), int index, vector<T> heap)
+void minMedianMax<T>::BubbleDown(bool (*func)(T a, T b), int index, std::vector<T> heap)
 {
     int length = heap.size();
     int leftChildIndex = 2 * index + 1;
@@ -50,7 +51,7 @@ void minMedianMax<T>::BubbleDown(bool (*func)(T a, T b), int index, vector<T> he
 }
 
 template <class T>
-void minMedianMax<T>::BubbleUp(bool (*func)(T a, T b), int index, vector<T> heap)
+void minMedianMax<T>::BubbleUp(bool (*func)(T a, T b), int index, std::vector<T> heap)
 {
     if (index == 0)
         return;
@@ -69,21 +70,21 @@ void minMedianMax<T>::BubbleUp(bool (*func)(T a, T b), int index, vector<T> heap
 template <class T>
 void minMedianMax<T>::insert(bool isMin, T el)
 {
-    bool (*func)(T, T);
+    bool (minMedianMax<T>::*func)(T, T);
     if (isMin)
     {
         minSize++;
         min_heap.resize(minSize);
-        func = &minComparer;
         min_heap[minSize] = el;
+        func = &minMedianMax<T>::minComparer;
         BubbleUp(func, minSize, min_heap);
     }
     else
     {
         maxSize++;
         max_heap.resize(maxSize);
-        func = &maxComparer;
         max_heap[maxSize] = el;
+        func = &minMedianMax<T>::maxComparer;
         BubbleUp(func, maxSize, max_heap);
     }
 }
@@ -91,23 +92,60 @@ void minMedianMax<T>::insert(bool isMin, T el)
 template <class T>
 void minMedianMax<T>::remove(T el)
 {
+    for (int i = 0; i < min_heap.size(); i++)
+    {
+        if (min_heap[i] == el)
+        {
+            min_heap[i] = min_heap[minSize - 1];
+            minSize--;
+            min_heap.resize(minSize);
+            heapify(true, minSize);
+            if (maxSize - minSize > 1)
+            {
+                T temp = max_heap[0];
+                remove(max_heap[0]);
+                insert(true, temp);
+            }
+            return;
+        }
+    }
+    for (int i = 0; i < max_heap.size(); i++)
+    {
+        if (max_heap[i] == el)
+        {
+            max_heap[i] = max_heap[maxSize - 1];
+            maxSize--;
+            max_heap.resize(maxSize);
+            heapify(false, maxSize);
+            if (minSize - maxSize > 1)
+            {
+                T temp = min_heap[0];
+                remove(min_heap[0]);
+                insert(false, temp);
+            }
+            return;
+        }
+    }
 }
 
 template <class T>
 void minMedianMax<T>::heapify(bool isMin, int size)
 {
+    bool (minMedianMax<T>::*func)(T, T);
     if (isMin)
     {
+        func = &minMedianMax<T>::minComparer;
         for (int i = size; i > 0; --i)
         {
-            BubbleDown(i);
+            BubbleDown(func, i, min_heap);
         }
     }
     else
     {
+        func = &minMedianMax<T>::maxComparer;
         for (int i = size; i > 0; --i)
         {
-            BubbleDown(i);
+            BubbleDown(func, i, max_heap);
         }
     }
 }
@@ -154,10 +192,15 @@ bool maxComparer(T a, T b)
 template <class T>
 bool minMedianMax<T>::search(T el)
 {
-}
-
-template <class T>
-bool minMedianMax<T>::isBalanced()
-{
-    return abs(minSize - maxSize) <= 1;
+    for (int i = 0; i < min_heap.size(); i++)
+    {
+        if (min_heap[i] == el)
+            return true;
+    }
+    for (int i = 0; i < max_heap.size(); i++)
+    {
+        if (max_heap[i] == el)
+            return true;
+    }
+    return false;
 }

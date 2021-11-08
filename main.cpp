@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "heap.h"
-#include "MinMedianMaxSketch.h"
+#include "MinMedianMaxSketch.cpp"
 using namespace std;
 
 template <typename T>
@@ -33,10 +33,9 @@ int main(int argc, char *argv[])
         f_insert.close();
         sort(insert_vec.begin(), insert_vec.end());
         int mid = insert_vec.size() / 2;
-        cout << insert_vec.size();
         vector<int> minheap = {insert_vec.begin() + mid, insert_vec.end()};
-        //vector<int> maxheap = {insert_vec.begin(), insert_vec.begin() + mid - 1};
-        cout << minheap.size();
+        vector<int> maxheap = {insert_vec.begin(), insert_vec.begin() + mid - 1};
+        minMedianMax<int> median(minheap.size(), maxheap.size(), minheap, maxheap);
 
         // while (getline(myfile2, el))
         // {
