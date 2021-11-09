@@ -195,7 +195,7 @@ T minMedianMax<T>::get_minimum()
         }
     }
 
-    std::cout << "hi" << min << std::endl;
+    
     
     return minimum;
 }
@@ -209,7 +209,7 @@ T minMedianMax<T>::get_maximum()
             maximum = min_heap[i];
         }
     }
-    std::cout << "hi" << max << std::endl;
+    
     
     return maximum;
 
