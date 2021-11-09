@@ -16,7 +16,7 @@ private:
 
 public:
     minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max);
-    void insert(bool isMin, T el);
+    void insert(bool isMin, T el, bool isNewElement);
     void ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> heap);
     void ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> heap);
     void remove(T el);
@@ -26,7 +26,7 @@ public:
     T get_maximum();
     int get_size();
     bool search(T el);
-    void rebalance();
+    void rebalance(bool isMin);
 };
 
 #endif
