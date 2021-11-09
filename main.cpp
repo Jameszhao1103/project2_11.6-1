@@ -36,11 +36,20 @@ int main(int argc, char *argv[])
         vector<int> minheap = {insert_vec.begin() + mid, insert_vec.end()};
         vector<int> maxheap = {insert_vec.begin(), insert_vec.begin() + mid};
 
+
         minMedianMax<int> hi(minheap.size(), maxheap.size(), minheap, maxheap);
         // while (getline(myfile2, el))
         // {
         //     remove_vec.push_back(el);
         // }
         // myfile.close();
+
+        cout << "MinMedianMaxSketch:" << endl;
+        cout << "Size = " << hi.get_size()  << endl;
+        cout << "Min = " << hi.get_minimum()  << endl;
+        cout << "Max = " << hi.get_maximum()  << endl;
+        cout << "Median = " << hi.get_median()  << endl;
+       
+    
     }
 }
