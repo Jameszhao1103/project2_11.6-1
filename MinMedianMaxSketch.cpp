@@ -27,11 +27,11 @@ minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, 
         // std::cout << min[i] << std::endl;
         min_heap.resize(inMinSize);
         max_heap.resize(inMaxSize);
-        minMedianMax<T>::insert(true, min[i], false);
+        minMedianMax<T>::insert(true, min[i], true);
     }
     for (int j = 0; j < inMaxSize; j++)
     {
-        minMedianMax<T>::insert(false, max[j], false);
+        minMedianMax<T>::insert(false, max[j], true);
     }
 }
 
@@ -84,7 +84,7 @@ void minMedianMax<T>::ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> 
 }
 
 template <class T>
-void minMedianMax<T>::insert(bool isMin, T el, bool isNewElement)
+void minMedianMax<T>::insert(bool isMin, T el, bool inConstructor)
 {
 
     bool (*func)(T, T);
@@ -92,23 +92,21 @@ void minMedianMax<T>::insert(bool isMin, T el, bool isNewElement)
     if (isMin)
     {
         minSize++;
-        if (isNewElement)
+        if (!inConstructor)
         {
             min_heap.resize(minSize);
         }
-        if (minSize == 17)
-            std::cout << "min_size" << min_heap[15] << std::endl;
         min_heap[minSize - 1] = el;
 
         func = &minComparer;
 
         ShiftUp(func, minSize, min_heap);
 
-        rebalance(true);
+        rebalance(true, inConstructor);
     }
     else
     {
-        if (isNewElement)
+        if (!inConstructor)
         {
             max_heap.resize(maxSize);
         }
@@ -117,7 +115,7 @@ void minMedianMax<T>::insert(bool isMin, T el, bool isNewElement)
         max_heap[maxSize - 1] = el;
         func = &maxComparer;
         ShiftUp(func, maxSize, max_heap);
-        rebalance(false);
+        rebalance(false, inConstructor);
     }
 }
 
@@ -134,7 +132,7 @@ void minMedianMax<T>::remove(T el)
                 minSize--;
                 min_heap.resize(minSize);
                 heapify(true, minSize);
-                rebalance(true);
+                rebalance(true, false);
             }
         }
     }
@@ -148,7 +146,7 @@ void minMedianMax<T>::remove(T el)
                 maxSize--;
                 max_heap.resize(maxSize);
                 heapify(false, maxSize);
-                rebalance(false);
+                rebalance(false, false);
             }
         }
     }
@@ -220,14 +218,18 @@ bool minMedianMax<T>::search(T el)
 }
 
 template <class T>
-void minMedianMax<T>::rebalance(bool isMin)
+void minMedianMax<T>::rebalance(bool isMin, bool inConstructor)
 {
-    std::cout << "hi" << std::endl;
+    //Three special situation
+    if (inConstructor)
+        return;
     if (isMin && minSize == 1)
         return;
     if (!isMin && maxSize == 1)
         return;
-    // std::cout << "hi" << std::endl;
+    if (minSize == maxSize)
+        return;
+    //std::cout << "hi" << std::endl;
     min = min_heap[0];
     max = max_heap[0];
 
@@ -237,13 +239,13 @@ void minMedianMax<T>::rebalance(bool isMin)
         T temp = max_heap[0];
 
         remove(max_heap[0]);
-        insert(true, temp, true);
+        insert(true, temp, false);
     }
     else if (minSize - maxSize > 1)
     {
         T temp = min_heap[0];
         remove(min_heap[0]);
-        insert(false, temp, true);
+        insert(false, temp, false);
     }
     return;
 }

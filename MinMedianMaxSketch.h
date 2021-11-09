@@ -26,7 +26,7 @@ public:
     T get_maximum();
     int get_size();
     bool search(T el);
-    void rebalance(bool isMin);
+    void rebalance(bool isMin, bool inConstructor);
 };
 
 #endif
