@@ -15,15 +15,17 @@ private:
     std::vector<T> max_heap;
 
 public:
-    minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max);
+    minMedianMax(int inMinSize, int inMaxSize, std::vector<T> inMin, std::vector<T> inMax);
     void insert(bool isMin, T el, bool isNewElement);
-    void ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> heap);
-    void ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> heap);
+    void ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> &heap);
+    void ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> &heap);
     void remove(T el);
     void heapify(bool isMin, int size);
     T get_median();
     T get_minimum();
     T get_maximum();
+    T getMaxheap(int i);
+    T getMinheap(int i);
     int get_size();
     bool search(T el);
     void rebalance(bool isMin, bool inConstructor);

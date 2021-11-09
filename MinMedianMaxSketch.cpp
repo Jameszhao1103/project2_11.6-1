@@ -17,26 +17,25 @@ bool maxComparer(T a, T b)
 }
 
 template <class T>
-minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> min, std::vector<T> max)
+minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> inMin, std::vector<T> inMax)
 {
+    min_heap.resize(inMinSize);
+    max_heap.resize(inMaxSize);
+    min = inMax[0];
+    max = inMin[inMinSize - 1];
     for (int i = 0; i < inMinSize; i++)
     {
-        //std::cout << "min_size" << minSize << std::endl;
-        //std::cout << "i" << i << std::endl;
-        //std::cout << "max_size" << maxSize << std::endl;
         // std::cout << min[i] << std::endl;
-        min_heap.resize(inMinSize);
-        max_heap.resize(inMaxSize);
-        minMedianMax<T>::insert(true, min[i], true);
+        minMedianMax<T>::insert(true, inMin[i], true);
     }
     for (int j = 0; j < inMaxSize; j++)
     {
-        minMedianMax<T>::insert(false, max[j], true);
+        minMedianMax<T>::insert(false, inMax[j], true);
     }
 }
 
 template <class T>
-void minMedianMax<T>::ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> heap)
+void minMedianMax<T>::ShiftDown(bool (*func)(T a, T b), int index, std::vector<T> &heap)
 {
     int length = heap.size();
     int left = 2 * index + 1;
@@ -67,7 +66,7 @@ void minMedianMax<T>::ShiftDown(bool (*func)(T a, T b), int index, std::vector<T
 }
 
 template <class T>
-void minMedianMax<T>::ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> heap)
+void minMedianMax<T>::ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> &heap)
 {
     if (index == 0)
         return;
@@ -76,7 +75,7 @@ void minMedianMax<T>::ShiftUp(bool (*func)(T a, T b), int index, std::vector<T> 
 
     if (func(heap[index], heap[parent]))
     {
-        int temp = heap[parent];
+        T temp = heap[parent];
         heap[parent] = heap[index];
         heap[index] = temp;
         ShiftUp(func, parent, heap);
@@ -87,8 +86,6 @@ template <class T>
 void minMedianMax<T>::insert(bool isMin, T el, bool inConstructor)
 {
 
-    bool (*func)(T, T);
-
     if (isMin)
     {
         minSize++;
@@ -97,26 +94,33 @@ void minMedianMax<T>::insert(bool isMin, T el, bool inConstructor)
             min_heap.resize(minSize);
         }
         min_heap[minSize - 1] = el;
-
-        func = &minComparer;
-
-        ShiftUp(func, minSize, min_heap);
-
-        rebalance(true, inConstructor);
+        bool (*func)(T, T) = minComparer;
+        ShiftUp(func, minSize - 1, min_heap);
+        rebalance(isMin, inConstructor);
     }
     else
     {
+        maxSize++;
         if (!inConstructor)
         {
             max_heap.resize(maxSize);
         }
-        maxSize++;
-
         max_heap[maxSize - 1] = el;
-        func = &maxComparer;
-        ShiftUp(func, maxSize, max_heap);
-        rebalance(false, inConstructor);
+        bool (*func)(T, T) = maxComparer;
+        ShiftUp(func, maxSize - 1, max_heap);
+        rebalance(isMin, inConstructor);
     }
+}
+template <class T>
+T minMedianMax<T>::getMaxheap(int i)
+{
+    return max_heap[i];
+}
+
+template <class T>
+T minMedianMax<T>::getMinheap(int i)
+{
+    return min_heap[i];
 }
 
 template <class T>
@@ -178,9 +182,13 @@ template <class T>
 T minMedianMax<T>::get_median()
 {
     if (minSize > maxSize)
-        return min;
+    {
+        return min_heap[0];
+    }
     else
-        return max;
+    {
+        return max_heap[0];
+    }
 }
 
 template <class T>
