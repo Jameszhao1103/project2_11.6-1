@@ -32,6 +32,8 @@ minMedianMax<T>::minMedianMax(int inMinSize, int inMaxSize, std::vector<T> inMin
     {
         minMedianMax<T>::insert(false, inMax[j], true);
     }
+    min = min_heap[0];
+    max = max_heap[0];
 }
 
 template <class T>
@@ -194,13 +196,31 @@ T minMedianMax<T>::get_median()
 template <class T>
 T minMedianMax<T>::get_minimum()
 {
-    return min;
+    int minimum = 9999;
+    for (int i = 0; i < maxSize; i++)
+    {
+        if (max_heap[i] < minimum)
+        {
+            minimum = max_heap[i];
+        }
+    }
+
+    return minimum;
 }
 
 template <class T>
 T minMedianMax<T>::get_maximum()
 {
-    return max;
+    int maximum = -9999;
+    for (int i = 0; i < maxSize; i++)
+    {
+        if (min_heap[i] > maximum)
+        {
+            maximum = min_heap[i];
+        }
+    }
+
+    return maximum;
 }
 
 template <class T>
@@ -237,9 +257,11 @@ void minMedianMax<T>::rebalance(bool isMin, bool inConstructor)
         return;
     if (minSize == maxSize)
         return;
-    //std::cout << "hi" << std::endl;
+
     min = min_heap[0];
+    //std::cout << "hi" << min << std::endl;
     max = max_heap[0];
+    //std::cout << "hi" << max << std::endl;
 
     if (maxSize - minSize > 1)
     {
